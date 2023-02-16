@@ -1,0 +1,49 @@
+# text-Like
+type pp : t {
+    predicates {
+        not_asked(pp);
+        asked(pp);
+        snatched(pp);
+        not_snatched(pp);
+    }
+
+    rules {
+        snatch/pp   :: $at(P, r) & at(pp, r) -> at(pp, r);
+        ask/pp :: $at(P, r) & at(pp,r) -> at(pp, r);
+    }
+    
+    constraints {
+        pp1 :: asked(pp) & not_asked(pp) -> fail();
+        pp2 :: snatched(pp) & not_snatched(pp) -> fail();
+
+    }
+
+    inform7 {
+        type {
+            kind :: "people-like";
+            definition :: "people-like can be asked. people-like can be snatched. people-like is fixed in place.";
+        }
+
+        predicates {
+            asked(pp) :: "The {pp} is asked";
+            not_asked(pp) :: "The {pp} is not asked";
+            snatched(pp) :: "";
+            not_snatched(pp) :: "";
+        }
+
+        commands {            
+            ask/pp :: "ask help from {pp} to give you money" :: "_asking money from {pp}";
+            snatch/pp :: "snatch money from {pp}" :: "_snatching money from {pp}";
+        }
+        
+        code :: """
+            Understand the command "ask" as something new. 
+            Understand "ask help from [something] to give you money" as _asking. 
+            _asking is an action applying to a thing. 
+        
+            Understand the command "snatch" as something new. 
+            Understand "snatch money from [something]" as _snatching. 
+            _snatching is an action applying to a thing. 
+               """;
+    }
+}

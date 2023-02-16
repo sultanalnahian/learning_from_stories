@@ -1,0 +1,70 @@
+# text-Like
+type asgn : t {
+    predicates {
+        finished(asgn);
+        not_finished(asgn);
+        studied(asgn);
+        not_studied(asgn);
+
+    }
+
+    rules {
+        copy/asgn   :: $at(P, r) & $at(asgn, r) & $not_studied(asgn) & not_finished(asgn) -> finished(asgn);
+        study/asgn :: $at(P, r) & $at(asgn,r) & $not_finished(asgn) & not_studied(asgn) -> studied(asgn);
+        homework/asgn :: $at(P, r) & $at(asgn,r) & $studied(asgn) & not_finished(asgn) -> finished(asgn);
+    }
+    
+    constraints {
+        asgn1 :: finished(asgn) & not_finished(asgn) -> fail();
+        asgn2 :: studied(asgn) & not_studied(asgn) -> fail();
+
+    }
+
+    inform7 {
+        type {
+            kind :: "assignment-like";
+            definition :: "assignment-like can be finished. assignment-like can be studied. assignment-like are usually not studied. assignment-like is fixed in place.";
+        }
+
+        predicates {
+            finished(asgn) :: "The {asgn} is finished";
+            not_finished(asgn) :: "The {asgn} is not finished";
+            studied(asgn) :: "";
+            not_studied(asgn) :: "";
+        }
+
+        commands {            
+            copy/asgn :: "copy the {asgn} from your friend":: "_copying the {asgn}";
+            study/asgn :: "go to the library to study" :: "going to the library to study";
+            homework/asgn :: "complete the {asgn} by your own" :: "_completing the {asgn}";
+        }
+        
+        code :: """
+            Understand the command "copy" as something new. 
+            Understand "copy the [something] from your friend" as _copying. 
+            _copying is an action applying to a thing. 
+        
+            Carry out _copying: 
+                if a assignment-like (called asn) is not finished: 
+                    Say "You copied assignment from your friend.";
+                    Now the asn is finished; 
+
+            Understand the command "study" as something new. 
+            Understand "go to the library to study" as going to the library to study. 
+            going to the library to study is an action applying to nothing. 
+        
+            Carry out going to the library to study:
+                if a assignment-like (called asn) is not studied: 
+                    Say "You are now in the library.";
+                    Now the asn is studied; 
+
+            Understand the command "homework" as something new. 
+            Understand "complete the [something] by your own" as _completing. 
+            _completing is an action applying to a thing. 
+        
+            Carry out _completing the assignment-like(called asn): 
+                Say "Good job! you have completed your assignment";
+                Now the asn is finished;
+        """;
+    }
+}

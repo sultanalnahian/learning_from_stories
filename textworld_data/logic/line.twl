@@ -1,0 +1,72 @@
+# text-Like
+type ln : t {
+    predicates {
+        joined(ln);
+        not_joined(ln);
+        checked(ln);
+        not_checked(ln);
+    }
+
+    rules {
+        cut/ln   :: $at(P, r) & $at(ln, r) & $not_checked(ln) & not_joined(ln) -> joined(ln);
+        stand/ln :: $at(P, r) & $at(ln, r) & $not_joined(ln) & not_checked(ln) -> checked(ln);
+        stay/ln :: $at(P, r) & $at(ln, r) & $checked(ln) & not_joined(ln) -> joined(ln);
+    }
+    
+    constraints {
+        ln1 :: joined(ln) & not_joined(ln) -> fail();
+        ln2 :: checked(ln) & not_checked(ln) -> fail();
+
+    }
+
+    inform7 {
+        type {
+            kind :: "line-like";
+            definition :: "line-like can be checked. line-like is usually not checked. line-like can be joined. line-like is usually not joined. line-like is fixed in place.";
+        }
+
+        predicates {
+            joined(ln) :: "The {ln} is joined";
+            not_joined(ln) :: "The {ln} is not joined";
+            checked(ln) :: "The {ln} is checked";
+            not_checked(ln) :: "The {ln} is not checked";
+        }
+
+        commands {            
+            cut/ln :: "cut in the line":: "_cutting";
+            stand/ln :: "go to the end of the line" :: "_standing";
+            stay/ln :: "Wait patiently in the line to enter the carnival" :: "_waiting";
+        }
+        
+        code :: """
+
+          Understand the command "cut" as something new. 
+            Understand "cut in the line" as _cutting. 
+            _cutting is an action applying to nothing. 
+        
+            Carry out _cutting:
+                if a line-like (called lne) is not joined: 
+                    Say "Cut in line is not good behavior";
+                    Now the lne is joined; 
+
+            Understand the command "stand" as something new. 
+            Understand "go to the end of the line" as _standing. 
+            _standing is an action applying to nothing. 
+        
+            Carry out _standing:
+                if a line-like (called lne) is not checked: 
+                    Say "You are in the end of the line";
+                    Now the lne is checked; 
+
+            Understand the command "stay" as something new. 
+            Understand "Wait patiently in the line to enter the carnival" as _waiting. 
+            _waiting is an action applying to nothing. 
+        
+            Carry out _waiting:
+                if a line-like (called lne) is not joined: 
+                    Say "You are about to enter the carnival";
+                    Now the lne is joined; 
+
+        """;
+    }
+}

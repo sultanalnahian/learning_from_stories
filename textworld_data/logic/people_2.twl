@@ -1,0 +1,26 @@
+# text-Like
+type ppl : t {
+
+    rules {
+        seek/ppl :: $at(P, r) & at(ppl,r) -> at(ppl, r);
+    }
+    
+
+    inform7 {
+        type {
+            kind :: "people1-like";
+            definition :: "people1-like is fixed in place.";
+        }
+
+        commands {            
+            seek/ppl :: "seek job from {ppl} to earn money" :: "_seeking job from {ppl}";
+        }
+        
+        code :: """
+            Understand the command "seek" as something new. 
+            Understand "seek job from [something] to earn money" as _seeking. 
+            _seeking is an action applying to a thing. 
+        
+               """;
+    }
+}

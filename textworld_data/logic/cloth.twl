@@ -1,0 +1,73 @@
+# text-Like
+type cl : t {
+    predicates {
+        cleaned(cl);
+        not_cleaned(cl);
+        sorted(cl);
+        not_sorted(cl);
+
+    }
+
+    rules {
+        leave/cl   :: $at(P, r) & $at(cl, r) & $not_sorted(cl) & not_cleaned(cl) -> cleaned(cl);
+        sort/cl :: $at(P, r) & $at(cl, r) & $not_cleaned(cl) & not_sorted(cl) -> sorted(cl);
+        keep/cl :: $at(P, r) & $at(cl, r) & $sorted(cl) & not_cleaned(cl) -> cleaned(cl);
+    }
+    
+    constraints {
+        cl1 :: cleaned(cl) & not_cleaned(cl) -> fail();
+        cl2 :: sorted(cl) & not_sorted(cl) -> fail();
+
+    }
+
+    inform7 {
+        type {
+            kind :: "home-like";
+            definition :: "home-like can be cleaned. home-like can be sorted. home-like is fixed in place.";
+        }
+
+        predicates {
+            cleaned(cl) :: "The {cl} is cleaned";
+            not_cleaned(cl) :: "The {cl} is not cleaned";
+            sorted(cl) :: "";
+            not_sorted(cl) :: "";
+        }
+
+        commands {            
+            leave/cl :: "leave your room to clean up by your parents":: "_leaving";
+            sort/cl :: "place your clothes in the dresser" :: "_sorting";
+            keep/cl :: "sort scatter things in their places" :: "_keeping";
+        }
+        
+        code :: """
+
+          Understand the command "sort" as something new. 
+            Understand "place your clothes in the dresser" as _sorting. 
+            _sorting is an action applying to nothing. 
+        
+            Carry out _sorting:
+                if a home-like (called cle) is not sorted: 
+                    Say "Good job! your room is partly cleaned";
+                    Now the cle is sorted; 
+
+            Understand the command "leave" as something new. 
+            Understand "leave your room to clean up by your parents" as _leaving. 
+            _leaving is an action applying to nothing. 
+        
+            Carry out _leaving:
+                if a home-like (called cle) is not cleaned: 
+                    Say "you leave from the room";
+                    Now the cle is cleaned; 
+
+            Understand the command "keep" as something new. 
+            Understand "sort scatter things in their places" as _keeping. 
+            _keeping is an action applying to nothing. 
+        
+            Carry out _keeping:
+                if a home-like (called cle) is not cleaned: 
+                    Say "Great! your room is clean now";
+                    Now the cle is cleaned; 
+
+        """;
+    }
+}

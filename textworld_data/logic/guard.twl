@@ -1,0 +1,86 @@
+# text-Like
+type gr : t {
+    predicates {
+        killed(gr);
+        not_killed(gr);
+        broken(gr);
+        not_broken(gr);
+        stolen(gr);
+        not_stolen(gr);
+    }
+
+    rules {
+        kill/gr   :: $at(P, r) & $at(gr, r) & not_killed(gr) -> killed(gr);
+        attack/gr :: $at(P, r) & $at(gr, r) & not_killed(gr) -> killed(gr);
+        break/gr :: $at(P, r) & $at(gr, r) & $killed(gr) & not_broken(gr) -> broken(gr);
+        steal/gr :: $at(P, r) & $at(gr, r) & $killed(gr) & $broken(gr) & not_stolen(gr) -> stolen(gr);
+    }
+    
+    constraints {
+        gr1 :: killed(gr) & not_killed(gr) -> fail();
+        gr2 :: broken(gr) & not_broken(gr) -> fail();
+        gr3 :: stolen(gr) & not_stolen(gr) -> fail();
+    }
+
+    inform7 {
+        type {
+            kind :: "guard-like";
+            definition :: "guard-like can be killed. guard-like is usually not killed. guard-like can be broken. guard-like is usually not broken. guard-like can be stolen. guard-like is usually not stolen. guard-like is fixed in place.";
+        }
+
+        predicates {
+            killed(gr) :: "The {gr} is killed";
+            not_killed(gr) :: "The {gr} is not killed";
+            broken(gr) :: "The {gr} is broken";
+            not_broken(gr) :: "The {gr} is not broken";
+            stolen(gr) :: "The {gr} is stolen";
+            not_stolen(gr) :: "The {gr} is not stolen";
+        }
+
+        commands {            
+            kill/gr :: "kill the guard":: "_killing";
+            attack/gr :: "attack the guard and make him unconscious" :: "_attacking";
+            break/gr :: "break the store" :: "_breaking";
+            steal/gr :: "steal food from the store" :: "_stealing";
+        }
+        
+        code :: """
+
+          Understand the command "kill" as something new. 
+            Understand "kill the guard" as _killing. 
+            _killing is an action applying to nothing. 
+        
+            Carry out _killing:
+                if a guard-like (called grd) is not killed: 
+                    Say "the guard has been killed";
+                    Now the grd is killed; 
+
+            Understand the command "attack" as something new. 
+            Understand "attack the guard and make him unconscious" as _attacking. 
+            _attacking is an action applying to nothing. 
+        
+            Carry out _attacking:
+                if a guard-like (called grd) is not killed: 
+                    Say "the guard has became unconscious";
+                    Now the grd is killed; 
+
+            Understand the command "break" as something new. 
+            Understand "break the store" as _breaking. 
+            _breaking is an action applying to nothing. 
+        
+            Carry out _breaking:
+                if a guard-like (called grd) is not broken: 
+                    Say "the store has been broken";
+                    Now the grd is broken;
+
+            Understand the command "steal" as something new. 
+            Understand "steal food from the store" as _stealing. 
+            _stealing is an action applying to nothing. 
+        
+            Carry out _stealing:
+                if a guard-like (called grd) is not stolen: 
+                    Say "the man stole food from the store";
+                    Now the grd is stolen; 
+        """;
+    }
+}
