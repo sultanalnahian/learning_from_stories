@@ -21,3 +21,6 @@ Other parameters we can set:
 * game_path (type=str, default="tw_games/stealing_food.ulx") - Custom designed textworld game to test the value aligned agent.
 * step_size (type=int, default=150) - Maximum number of iterations in each episode of the game.
 * save_path (type=str, default="./model/baseline.npy") - Directory to save the trained model
+
+## Test Environment
+To test the performance of the trained Value-Aligned agent, we have implemented text-based simulation environments using TextWorld. We have created new custom game entities to implement the environments. "textworld_data" contains the logic and grammer files of theses new entities. Code examples to design text-based games using these entities is given in the tw_game_design.ipynb notebook.
