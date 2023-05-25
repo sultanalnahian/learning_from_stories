@@ -12,7 +12,7 @@ train.py contains the training script to train the agent.
 
 Example train command:
 ```
-python train.py --nb_episodes 1500
+python train_baseline.py --nb_episodes 1500
 ```
 Other parameters we can set:
 
